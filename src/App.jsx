@@ -1,15 +1,12 @@
-import './App.css'
+import { Provider } from 'react-redux'
+import appStore from './utils/store/appStore'
+import LayoutComponent from './Layout'
 
-import { Button, HStack } from '@chakra-ui/react'
-
-function App() {
+const App = () => {
   return (
-    <>
-      <HStack>
-        <Button>Click me</Button>
-        <Button>Click me</Button>
-      </HStack>
-    </>
+    <Provider store={appStore}>
+      <LayoutComponent style={{ minHeight: '100vh' }} />
+    </Provider>
   )
 }
 
