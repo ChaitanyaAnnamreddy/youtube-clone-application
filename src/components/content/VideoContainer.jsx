@@ -48,11 +48,10 @@ const VideoContainer = () => {
             hoveredIndex === index ? (
               <iframe
                 width="460"
-                height="280"
+                height="270"
                 src={`https://www.youtube.com/embed/${item.id}?autoplay=1&mute=1`}
                 title="YouTube video player"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowFullScreen
               ></iframe>
             ) : (
               <img
@@ -63,7 +62,7 @@ const VideoContainer = () => {
             )
           }
           style={{
-            width: 360,
+            width: 320,
             cursor: 'pointer',
             height: 420,
             objectFit: 'cover',

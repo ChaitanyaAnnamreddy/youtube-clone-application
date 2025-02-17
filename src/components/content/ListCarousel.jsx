@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { Button } from 'antd'
+import { useSelector } from 'react-redux'
 
 const ScrollContainer = styled.div`
   display: flex;
@@ -11,7 +12,6 @@ const ScrollContainer = styled.div`
   -ms-overflow-style: none; /* Hide scrollbar for IE/Edge */
   position: fixed;
   top: 60px;
-  left: 200px;
   z-index: 999;
 `
 
@@ -27,6 +27,7 @@ const StyledButton = styled(Button)`
 `
 
 const HorizontalScrollList = () => {
+    const collapsed = useSelector((state) => state.app.collapsed)
   const items = [
     'All',
     'Brahmanandam',
@@ -46,7 +47,7 @@ const HorizontalScrollList = () => {
   ]
 
   return (
-    <ScrollContainer>
+    <ScrollContainer style={{ width: `calc(100% - ${collapsed ? '80px' : '200px'})` }}>
       {items.map((text, index) => (
         <StyledButton key={index}>{text}</StyledButton>
       ))}
