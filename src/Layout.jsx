@@ -19,6 +19,7 @@ const LayoutComponent = () => {
           style={{
             margin: '64px 0px 0px',
             backgroundColor: 'rgb(0, 21, 41)',
+            minHeight: '100%',
           }}
         >
           <Body />

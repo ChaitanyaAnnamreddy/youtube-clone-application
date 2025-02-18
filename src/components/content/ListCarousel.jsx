@@ -17,9 +17,9 @@ const ScrollContainer = styled.div`
 
 const StyledButton = styled(Button)`
   flex: none;
-  background-color: hsla(0, 0%, 100%, 0.08);
+  background-color: #102542;
   border: none;
-  color: white;
+  color: #FBFFE5;
   white-space: nowrap;
   padding: 8px 16px;
   border-radius: 20px;

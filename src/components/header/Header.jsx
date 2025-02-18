@@ -78,7 +78,7 @@ const HeaderBar = () => {
           style={{ maxWidth: '500px' }}
         />
 
-        <Flex gap={2} justify="center" style={{ marginRight: '20px' }}>
+        <Flex gap={'10px'} justify="center" style={{ marginRight: '20px' }}>
           <StyledButton type="primary" icon={<BellOutlined />} shape="circle" />
           <Button type="primary" icon={<UserOutlined />} shape="circle" />
         </Flex>
