@@ -19,7 +19,7 @@ const WatchShorts = () => {
   const params = useParams()
   const youtubeShorts = useSelector((state) => state.youtubeShorts.items)
   const dispatch = useDispatch()
-  console.log('youtubeShorts', youtubeShorts)
+
   // Find the specific video matching params.id to initialize like count
   const video = youtubeShorts.find((item) => item.id === params.id)
   const initialLikes = video?.statistics?.likeCount || 0

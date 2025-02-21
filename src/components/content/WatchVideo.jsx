@@ -20,7 +20,7 @@ const updateVideoLikes = (videoId, likes) => {
 const WatchVideo = () => {
   const isTablet = useMediaQuery({ query: '(max-width: 768px)' })
   const isMobile = useMediaQuery({ query: '(max-width: 480px)' })
-  console.log('isMobile', isMobile)
+
   const params = useParams()
   const dispatch = useDispatch()
 

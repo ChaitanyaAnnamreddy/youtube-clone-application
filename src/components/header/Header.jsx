@@ -9,7 +9,7 @@ import { Link } from 'react-router'
 import { useMediaQuery } from 'react-responsive'
 import { useState, useEffect } from 'react'
 import { YOUTUBE_SEARCH_API } from '../../utils/constants'
-import { setItems } from '../../utils/store/youtubeVideoSlice'
+import { SearchOutlined } from '@ant-design/icons'
 
 const { Header } = Layout
 const { Search } = Input
@@ -63,7 +63,6 @@ const StyledDropdown = styled(Dropdown)`
 const HeaderBar = () => {
   const isTablet = useMediaQuery({ maxWidth: 768 })
   const isMobile = useMediaQuery({ maxWidth: 480 })
-  const dispatch = useDispatch()
 
   const [searchQuery, setSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState([])
@@ -88,11 +87,9 @@ const HeaderBar = () => {
           YOUTUBE_SEARCH_API + encodeURIComponent(searchQuery)
         )
         const jsonData = await response.json()
-        console.log('jsonData', jsonData)
 
         if (jsonData.items) {
           setSearchResults(jsonData)
-          dispatch(setItems(jsonData.items))
         } else {
           setSearchResults([])
         }
@@ -114,7 +111,6 @@ const HeaderBar = () => {
 
   const collapsed = useSelector((state) => state.app.collapsed)
   const items = searchResults?.items || []
-  console.log('items', items)
 
   const menu = (
     <Menu onClick={handleMenuClick}>
@@ -136,6 +132,7 @@ const HeaderBar = () => {
                   verticalAlign: 'middle',
                 }}
               >
+                <SearchOutlined />
                 {result.snippet.title}
               </span>
             </Link>
