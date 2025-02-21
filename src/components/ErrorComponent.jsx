@@ -2,7 +2,7 @@ import { Button, Result } from 'antd'
 import styled from 'styled-components'
 
 const StyledResult = styled(Result)`
-  margin-top: 50px;
+  margin-top: 100px;
 
   .ant-result-title {
     color: #f1f1f1 !important;
