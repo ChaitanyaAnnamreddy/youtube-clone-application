@@ -5,27 +5,28 @@ import { createBrowserRouter, RouterProvider } from 'react-router'
 import Body from './components/content/Body'
 import WatchVideo from './components/content/WatchVideo'
 import WatchShorts from './components/content/WatchShorts'
+import ErrorComponent from './components/ErrorComponent'
 
 const appRouter = createBrowserRouter([
   {
     path: '/',
     element: <LayoutComponent />,
-    errorElement: <div>Something went wrong</div>,
+    errorElement: <ErrorComponent />,
     children: [
       {
         path: '/',
         element: <Body />,
-        errorElement: <div>Something went wrong</div>,
+        errorElement: <ErrorComponent />,
       },
       {
         path: '/watch/:id',
         element: <WatchVideo />,
-        errorElement: <div>Something went wrong</div>,
+        errorElement: <ErrorComponent />,
       },
       {
         path: '/shorts/:id',
         element: <WatchShorts />,
-        errorElement: <div>Something went wrong</div>,
+        errorElement: <ErrorComponent />,
       },
     ],
   },

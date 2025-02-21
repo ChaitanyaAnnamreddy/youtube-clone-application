@@ -71,6 +71,7 @@ const VideoContainer = ({ items }) => {
                 src={`https://www.youtube.com/embed/${item.id}?autoplay=1&mute=1`}
                 title="YouTube video player"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; web-share"
+                allowfullscreen
               ></iframe>
             ) : (
               <img
