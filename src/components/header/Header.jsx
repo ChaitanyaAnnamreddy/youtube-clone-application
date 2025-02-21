@@ -4,12 +4,13 @@ import { Image } from '@chakra-ui/react'
 import YoutubeIcon from '../../assets/youtube.svg'
 import { UserOutlined } from '@ant-design/icons'
 import styled from 'styled-components'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router'
 import { useMediaQuery } from 'react-responsive'
 import { useState, useEffect } from 'react'
 import { YOUTUBE_SEARCH_API } from '../../utils/constants'
 import { SearchOutlined } from '@ant-design/icons'
+import { storeSearchResult } from '../../utils/store/searchBarSlice'
 
 const { Header } = Layout
 const { Search } = Input
@@ -64,6 +65,9 @@ const HeaderBar = () => {
   const isTablet = useMediaQuery({ maxWidth: 768 })
   const isMobile = useMediaQuery({ maxWidth: 480 })
 
+  const dispatch = useDispatch()
+  const searchCache = useSelector((state) => state.searchBar.items)
+
   const [searchQuery, setSearchQuery] = useState('')
   const [searchResults, setSearchResults] = useState([])
   const [loading, setLoading] = useState(false)
@@ -90,6 +94,8 @@ const HeaderBar = () => {
 
         if (jsonData.items) {
           setSearchResults(jsonData)
+          console.log('jsonData', jsonData)
+          dispatch(storeSearchResult({ [searchQuery]: jsonData.items }))
         } else {
           setSearchResults([])
         }
@@ -101,11 +107,16 @@ const HeaderBar = () => {
       }
     }
 
+    console.log('searchQuery', searchQuery)
+    console.log('searchCache', searchCache)
     // Debounce API call
     const timer = setTimeout(() => {
-      getSearchResults()
+      if (searchCache[searchQuery]) {
+        setSearchResults(searchCache[searchQuery])
+      } else {
+        getSearchResults()
+      }
     }, 200)
-
     return () => clearTimeout(timer)
   }, [searchQuery])
 
