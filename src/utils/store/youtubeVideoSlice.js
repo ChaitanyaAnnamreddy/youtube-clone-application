@@ -7,7 +7,16 @@ const youtubeVideoSlice = createSlice({
   },
   reducers: {
     setItems: (state, action) => {
-      state.items = action.payload
+      // Merge new items with existing ones, ensuring no duplicates
+      const newItems = action.payload
+      const existingIds = new Set(state.items.map((item) => item.id))
+
+      const mergedItems = [
+        ...state.items,
+        ...newItems.filter((item) => !existingIds.has(item.id)), // Only add new videos
+      ]
+
+      state.items = mergedItems
     },
     clearItems: (state) => {
       state.items = []
@@ -19,9 +28,15 @@ const youtubeVideoSlice = createSlice({
         video.statistics.likeCount = likes
       }
     },
+    addFetchedVideo: (state, action) => {
+      const video = action.payload
+      if (!state.items.some((item) => item.id === video.id)) {
+        state.items.push(video)
+      }
+    },
   },
 })
 
-export const { setItems, clearItems, updateVideoLikes } =
+export const { setItems, clearItems, updateVideoLikes, addFetchedVideo } =
   youtubeVideoSlice.actions
 export default youtubeVideoSlice.reducer

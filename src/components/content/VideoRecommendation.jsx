@@ -51,18 +51,6 @@ const MetaWrapper = styled.div`
   justify-content: space-between;
 `
 
-const formatViewCount = (views) => {
-  if (views >= 1_000_000) return (views / 1_000_000).toFixed(1) + 'M views'
-  if (views >= 1_000) return (views / 1_000).toFixed(1) + 'K views'
-  return views + ' views'
-}
-
-const timeAgo = (dateString) => {
-  const date = new Date(dateString)
-  const diff = Math.floor((new Date() - date) / (1000 * 60 * 60 * 24))
-  return diff === 0 ? 'Today' : `${diff} days ago`
-}
-
 const VideoRecommendation = ({ items }) => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
@@ -112,10 +100,6 @@ const VideoRecommendation = ({ items }) => {
             </Title>
             <Text style={{ color: '#aaaaaa', fontSize: '12px' }}>
               {item.snippet.channelTitle}
-            </Text>
-            <Text style={{ color: '#aaaaaa', fontSize: '12px' }}>
-              {formatViewCount(item.statistics.viewCount)} •{' '}
-              {timeAgo(item.snippet.publishedAt)}
             </Text>
           </MetaWrapper>
         </StyledCard>

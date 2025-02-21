@@ -3,19 +3,20 @@ import { useParams } from 'react-router'
 import { Text } from '@chakra-ui/react'
 import { useSelector, useDispatch } from 'react-redux'
 import { useState, useEffect } from 'react'
-import {
-  ShareAltOutlined,
-  DownloadOutlined,
-  LikeOutlined,
-} from '@ant-design/icons'
+// import {
+//   ShareAltOutlined,
+//   DownloadOutlined,
+//   LikeOutlined,
+// } from '@ant-design/icons'
 import VideoRecommendation from './VideoRecommendation'
 import VideoComments from './VideoComments'
 import { useMediaQuery } from 'react-responsive'
+import { addFetchedVideo } from '../../utils/store/youtubeVideoSlice'
 
 // Action to update like/dislike in Redux (optional, if you want to persist state)
-const updateVideoLikes = (videoId, likes) => {
-  return { type: 'UPDATE_VIDEO_LIKES', payload: { videoId, likes } }
-}
+// const updateVideoLikes = (videoId, likes) => {
+//   return { type: 'UPDATE_VIDEO_LIKES', payload: { videoId, likes } }
+// }
 
 const WatchVideo = () => {
   const isTablet = useMediaQuery({ query: '(max-width: 768px)' })
@@ -26,51 +27,75 @@ const WatchVideo = () => {
 
   const youtubeVideo = useSelector((state) => state.youtubeVideo.items)
   // Find the specific video matching params.id to initialize like count
-  const video = youtubeVideo.find((item) => item.id === params.id)
-  const initialLikes = video?.statistics?.likeCount || 0
+  const video =
+    youtubeVideo.find((item) => item.id === params.id) ||
+    youtubeVideo.find((item) => item.id.videoId === params.id)
+  //   const initialLikes = video?.statistics?.likeCount || 0
 
-  const [userLiked, setUserLiked] = useState(false) // Track if user has liked
-  const [likeCount, setLikeCount] = useState(initialLikes) // Total likes
+  //   const [userLiked, setUserLiked] = useState(false) // Track if user has liked
+  //   const [likeCount, setLikeCount] = useState(initialLikes) // Total likes
+  const [currentVideo, setCurrentVideo] = useState(video || null)
 
   // Format large numbers (e.g., 1,000 → 1K, 1,000,000 → 1M)
-  const formatCount = (count) => {
-    if (count >= 1_000_000) return (count / 1_000_000).toFixed(1) + 'M'
-    if (count >= 1_000) return (count / 1_000).toFixed(1) + 'K'
-    return count.toString()
-  }
+  //   const formatCount = (count) => {
+  //     if (count >= 1_000_000) return (count / 1_000_000).toFixed(1) + 'M'
+  //     if (count >= 1_000) return (count / 1_000).toFixed(1) + 'K'
+  //     return count.toString()
+  //   }
+
+  useEffect(() => {
+    const fetchVideoDetails = async () => {
+      if (!video) {
+        try {
+          const response = await fetch(
+            `https://www.googleapis.com/youtube/v3/videos?part=snippet,statistics&id=${params.id}&key=${process.env.YOUTUBE_API_KEY}`
+          )
+          const data = await response.json()
+          if (data.items.length > 0) {
+            setCurrentVideo(data.items[0])
+            dispatch(addFetchedVideo(data.items[0]))
+          }
+        } catch (error) {
+          console.error('Error fetching video details:', error)
+        }
+      } else {
+        setCurrentVideo(video) // Use existing Redux data
+      }
+    }
+
+    fetchVideoDetails()
+  }, [params.id, youtubeVideo, dispatch, video])
 
   // Handle like button click
-  const handleLike = () => {
-    if (userLiked) {
-      // Undo like (user unlikes)
-      setLikeCount(likeCount - 1)
-      setUserLiked(false)
-    } else {
-      // Add like
-      setLikeCount(likeCount + 1)
-      setUserLiked(true)
-    }
-    // Optionally dispatch to Redux or API here
-    dispatch(updateVideoLikes(params.id, likeCount))
-  }
+  //   const handleLike = () => {
+  //     if (userLiked) {
+  // Undo like (user unlikes)
+  //       setLikeCount(likeCount - 1)
+  //       setUserLiked(false)
+  //     } else {
+  // Add like
+  //       setLikeCount(likeCount + 1)
+  //       setUserLiked(true)
+  //     }
+  // Optionally dispatch to Redux or API here
+  //     dispatch(updateVideoLikes(params.id, likeCount))
+  //   }
 
   // Ensure state updates when youtubeVideo or params.id changes
-  useEffect(() => {
-    const video = youtubeVideo.find((item) => item.id === params.id)
-    const newLikeCount = video?.statistics?.likeCount || 0
-    setLikeCount(newLikeCount)
-    setUserLiked(false) // Reset user interaction on video change
-  }, [params.id, youtubeVideo])
+  //   useEffect(() => {
+  //     const video = youtubeVideo.find((item) => item.id === params.id)
+  //     const newLikeCount = video?.statistics?.likeCount || 0
+  //     setLikeCount(newLikeCount)
+  //     setUserLiked(false) // Reset user interaction on video change
+  //   }, [params.id, youtubeVideo])
 
   // Format view count
-  const formatViewCount = (views) => {
-    if (views >= 1_000_000) return (views / 1_000_000).toFixed(1) + 'M views'
-    if (views >= 1_000) return (views / 1_000).toFixed(1) + 'K views'
-    return views + ' views'
-  }
-
-  // Find video data for rendering
-  const currentVideo = youtubeVideo.find((item) => item.id === params.id) || {}
+  //   const formatViewCount = (views) => {
+  //     if (views >= 1_000_000) return (views / 1_000_000).toFixed(1) + 'M views'
+  //     if (views >= 1_000) return (views / 1_000).toFixed(1) + 'K views'
+  //     return views + ' views'
+  //   }
+  console.log('youtubeVideo', video)
 
   return (
     <Flex
@@ -121,13 +146,13 @@ const WatchVideo = () => {
           >
             <Flex vertical>
               <Text textStyle="sm" style={{ color: '#aaa' }}>
-                {currentVideo.snippet?.channelTitle || 'Channel Not Available'}
+                {currentVideo?.snippet?.channelTitle}
               </Text>
-              <Text textStyle="sm" style={{ color: '#aaa' }}>
-                {formatViewCount(currentVideo.statistics?.viewCount || 0)}
-              </Text>
+              {/* <Text textStyle="sm" style={{ color: '#aaa' }}>
+                {formatViewCount(video?.statistics?.viewCount || 0)}
+              </Text> */}
             </Flex>
-            <Flex gap="small" align="center">
+            {/* <Flex gap="small" align="center">
               <Button
                 icon={<LikeOutlined />}
                 style={{
@@ -159,7 +184,7 @@ const WatchVideo = () => {
               >
                 {isMobile ? <></> : 'Download'}
               </Button>
-            </Flex>
+            </Flex> */}
           </Flex>
         </Flex>
         <VideoComments />

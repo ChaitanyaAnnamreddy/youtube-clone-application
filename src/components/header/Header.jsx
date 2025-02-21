@@ -11,6 +11,7 @@ import { useState, useEffect } from 'react'
 import { YOUTUBE_SEARCH_API } from '../../utils/constants'
 import { SearchOutlined } from '@ant-design/icons'
 import { storeSearchResult } from '../../utils/store/searchBarSlice'
+import { setItems } from '../../utils/store/youtubeVideoSlice'
 
 const { Header } = Layout
 const { Search } = Input
@@ -96,6 +97,7 @@ const HeaderBar = () => {
           setSearchResults(jsonData)
           console.log('jsonData', jsonData)
           dispatch(storeSearchResult({ [searchQuery]: jsonData.items }))
+          dispatch(setItems(jsonData.items))
         } else {
           setSearchResults([])
         }
