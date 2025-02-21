@@ -1,11 +1,15 @@
-import { Layout, Button, Input, Flex } from 'antd'
+import { Layout, Button, Input, Flex, Dropdown, Menu, Spin } from 'antd'
 import { BellOutlined } from '@ant-design/icons'
 import { Image } from '@chakra-ui/react'
 import YoutubeIcon from '../../assets/youtube.svg'
 import { UserOutlined } from '@ant-design/icons'
 import styled from 'styled-components'
-import { useSelector } from 'react-redux' // Import selector to get collapse state
+import { useSelector, useDispatch } from 'react-redux'
 import { Link } from 'react-router'
+import { useMediaQuery } from 'react-responsive'
+import { useState, useEffect } from 'react'
+import { YOUTUBE_SEARCH_API } from '../../utils/constants'
+import { setItems } from '../../utils/store/youtubeVideoSlice'
 
 const { Header } = Layout
 const { Search } = Input
@@ -50,8 +54,98 @@ const StyledSearch = styled(Search)`
   }
 `
 
+const StyledDropdown = styled(Dropdown)`
+  .ant-dropdown {
+    min-width: 340px !important;
+  }
+`
+
 const HeaderBar = () => {
-  const collapsed = useSelector((state) => state.app.collapsed) // Get collapsed state
+  const isTablet = useMediaQuery({ maxWidth: 768 })
+  const isMobile = useMediaQuery({ maxWidth: 480 })
+  const dispatch = useDispatch()
+
+  const [searchQuery, setSearchQuery] = useState('')
+  const [searchResults, setSearchResults] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [dropdownOpen, setDropdownOpen] = useState(false)
+
+  const handleMenuClick = () => {
+    setDropdownOpen(false)
+  }
+
+  useEffect(() => {
+    const getSearchResults = async () => {
+      if (!searchQuery) {
+        setSearchResults([])
+        return
+      }
+
+      setLoading(true)
+
+      try {
+        const response = await fetch(
+          YOUTUBE_SEARCH_API + encodeURIComponent(searchQuery)
+        )
+        const jsonData = await response.json()
+        console.log('jsonData', jsonData)
+
+        if (jsonData.items) {
+          setSearchResults(jsonData)
+          dispatch(setItems(jsonData.items))
+        } else {
+          setSearchResults([])
+        }
+      } catch (error) {
+        console.error('Error fetching search results:', error)
+        setSearchResults([])
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    // Debounce API call
+    const timer = setTimeout(() => {
+      getSearchResults()
+    }, 200)
+
+    return () => clearTimeout(timer)
+  }, [searchQuery])
+
+  const collapsed = useSelector((state) => state.app.collapsed)
+  const items = searchResults?.items || []
+  console.log('items', items)
+
+  const menu = (
+    <Menu onClick={handleMenuClick}>
+      {loading ? (
+        <Menu.Item key="loading">
+          <Spin /> Searching...
+        </Menu.Item>
+      ) : items?.length > 0 ? (
+        items.map((result) => (
+          <Menu.Item key={result.id.videoId || result.id.channelId}>
+            <Link to={`/watch/${result.id.videoId}`}>
+              <span
+                style={{
+                  display: 'inline-block',
+                  maxWidth: '310px',
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  verticalAlign: 'middle',
+                }}
+              >
+                {result.snippet.title}
+              </span>
+            </Link>
+          </Menu.Item>
+        ))
+      ) : (
+        <Menu.Item key="no-results">No results found</Menu.Item>
+      )}
+    </Menu>
+  )
 
   return (
     <StyledHeader
@@ -72,12 +166,21 @@ const HeaderBar = () => {
             width={50}
           />
         </Link>
-
-        <StyledSearch
-          placeholder="Search"
-          enterButton
-          style={{ maxWidth: '500px' }}
-        />
+        <StyledDropdown
+          overlay={menu}
+          trigger={['click']}
+          open={dropdownOpen}
+          onOpenChange={setDropdownOpen}
+        >
+          <StyledSearch
+            allowClear
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search"
+            enterButton
+            style={{ maxWidth: isTablet || isMobile ? '50%' : '400px' }}
+          />
+        </StyledDropdown>
 
         <Flex gap={'10px'} justify="center" style={{ marginRight: '20px' }}>
           <StyledButton type="primary" icon={<BellOutlined />} shape="circle" />

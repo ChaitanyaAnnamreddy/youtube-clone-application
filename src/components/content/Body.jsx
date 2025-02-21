@@ -2,8 +2,11 @@ import { Flex } from 'antd'
 import ListCarousel from './ListCarousel'
 import VideoContainer from './VideoContainer'
 import Shorts from './Shorts'
+import { useSelector } from 'react-redux'
 
 const Body = () => {
+  const youtubeVideos = useSelector((state) => state.youtubeVideo.items)
+  const youtubeShorts = useSelector((state) => state.youtubeShorts.items)
   return (
     <Flex
       vertical
@@ -16,8 +19,12 @@ const Body = () => {
       }}
     >
       <ListCarousel />
-      <VideoContainer />
-      <Shorts />
+      <VideoContainer items={youtubeVideos.slice(0, 8)} />
+      <Shorts items={youtubeShorts.slice(0, 5)} />
+      <VideoContainer items={youtubeVideos.slice(8, 12)} />
+      <Shorts items={youtubeShorts.slice(5, 10)} />
+      <VideoContainer items={youtubeVideos.slice(12, 20)} />
+      <Shorts items={youtubeShorts.slice(10, 15)} />
     </Flex>
   )
 }

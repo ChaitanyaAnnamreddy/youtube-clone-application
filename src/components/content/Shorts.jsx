@@ -1,8 +1,9 @@
+/* eslint-disable react/prop-types */
 import { useEffect, useState } from 'react'
 import { YOUTUBE_SHORTS_API } from '../../utils/constants'
 import { Card, Flex } from 'antd'
-import { useDispatch, useSelector } from 'react-redux'
-import { setItems, clearItems } from '../../utils/store/youtubeShortsSlice'
+import { useDispatch } from 'react-redux'
+import { setItems } from '../../utils/store/youtubeShortsSlice'
 import styled from 'styled-components'
 import { Text } from '@chakra-ui/react'
 import shortsIcon from '../../assets/youtube-shorts.svg'
@@ -26,25 +27,19 @@ const formatViewCount = (views) => {
   return views + ' views'
 }
 
-const Shorts = () => {
+const Shorts = ({ items }) => {
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  const youtubeShorts = useSelector((state) => state.youtubeShorts.items)
   const [hoveredIndex, setHoveredIndex] = useState(null)
 
   useEffect(() => {
     const fetchVideos = async () => {
       const response = await fetch(YOUTUBE_SHORTS_API)
       const data = await response.json()
-      console.log('data', data)
       dispatch(setItems(data.items))
     }
     fetchVideos()
-
-    return () => {
-      dispatch(clearItems())
-    }
   }, [dispatch])
 
   return (
@@ -56,8 +51,7 @@ const Shorts = () => {
         </Text>
       </Flex>
       <Flex gap="large" align="center">
-        {youtubeShorts.map((item, index) => (
-          // <Link to={`/watch/${item.id}`} key={index}>
+        {items.map((item, index) => (
           <Card
             key={index}
             onMouseEnter={() => setHoveredIndex(index)}
@@ -66,7 +60,7 @@ const Shorts = () => {
               hoveredIndex === index ? (
                 <iframe
                   width="320"
-                  height="300"
+                  height="350px"
                   src={`https://www.youtube.com/embed/${item.id}?autoplay=1&mute=1`}
                   title="YouTube video player"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; web-share"
@@ -76,8 +70,8 @@ const Shorts = () => {
                   alt="youtube thumbnail"
                   src={item.snippet.thumbnails.high.url}
                   style={{
-                    width: '320px',
-                    height: '300px',
+                    width: '320',
+                    height: '350px',
                     objectFit: 'cover',
                     borderRadius: '16px',
                   }}
@@ -104,7 +98,6 @@ const Shorts = () => {
               description={formatViewCount(item.statistics.viewCount)}
             />
           </Card>
-          // </Link>
         ))}
       </Flex>
     </>

@@ -3,7 +3,9 @@ import { createSlice } from '@reduxjs/toolkit'
 const youtubeShortsSlice = createSlice({
   name: 'youtubeShorts',
   initialState: {
-    items: [],
+    items: [
+      
+    ],
   },
   reducers: {
     setItems: (state, action) => {

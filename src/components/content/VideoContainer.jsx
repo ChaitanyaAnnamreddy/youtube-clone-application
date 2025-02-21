@@ -1,10 +1,12 @@
+/* eslint-disable react/prop-types */
 import { useEffect, useState } from 'react'
 import { YOUTUBE_VIDEO_API } from '../../utils/constants'
 import { Card, Flex } from 'antd'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { setItems } from '../../utils/store/youtubeVideoSlice'
 import styled from 'styled-components'
 import { useNavigate } from 'react-router'
+import { useMediaQuery } from 'react-responsive'
 
 const { Meta } = Card
 
@@ -30,11 +32,12 @@ const timeAgo = (dateString) => {
   return diff === 0 ? 'Today' : `${diff} days ago`
 }
 
-const VideoContainer = () => {
+const VideoContainer = ({ items }) => {
+  const isTablet = useMediaQuery({ query: '(max-width: 768px)' })
+  const isMobile = useMediaQuery({ query: '(max-width: 480px)' })
   const dispatch = useDispatch()
   const navigate = useNavigate()
 
-  const youtubeVideos = useSelector((state) => state.youtubeVideo.items)
   const [hoveredIndex, setHoveredIndex] = useState(null)
 
   useEffect(() => {
@@ -52,7 +55,7 @@ const VideoContainer = () => {
 
   return (
     <Flex wrap="wrap" gap="large" align="center">
-      {youtubeVideos.map((item, index) => (
+      {items.map((item, index) => (
         <Card
           key={index}
           onMouseEnter={() => setHoveredIndex(index)}
@@ -83,9 +86,9 @@ const VideoContainer = () => {
             )
           }
           style={{
-            width: 320,
+            width: isTablet ? '250px' : isMobile ? '100%' : '320px',
             cursor: 'pointer',
-            height: 350,
+            height: isTablet || isMobile ? '100%' : 350,
             objectFit: 'cover',
             overflow: 'hidden',
             borderRadius: '16px',
@@ -108,6 +111,14 @@ const VideoContainer = () => {
           />
         </Card>
       ))}
+    </Flex>
+  )
+}
+
+export const AdVideo = () => {
+  return (
+    <Flex>
+      <VideoContainer />
     </Flex>
   )
 }

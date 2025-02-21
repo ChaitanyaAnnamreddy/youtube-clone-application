@@ -2,6 +2,13 @@ import { Flex, Button } from 'antd'
 import { useParams } from 'react-router'
 import { useSelector, useDispatch } from 'react-redux'
 import { useState, useEffect } from 'react'
+import { Text } from '@chakra-ui/react'
+import {
+  CommentOutlined,
+  ShareAltOutlined,
+  EllipsisOutlined,
+  LikeOutlined,
+} from '@ant-design/icons'
 
 // Action to update like/dislike in Redux (optional, if you want to persist state)
 const updateVideoLikes = (videoId, likes) => {
@@ -12,13 +19,15 @@ const WatchShorts = () => {
   const params = useParams()
   const youtubeShorts = useSelector((state) => state.youtubeShorts.items)
   const dispatch = useDispatch()
-
+  console.log('youtubeShorts', youtubeShorts)
   // Find the specific video matching params.id to initialize like count
   const video = youtubeShorts.find((item) => item.id === params.id)
   const initialLikes = video?.statistics?.likeCount || 0
+  const initialComments = video?.statistics?.commentCount || 0
 
   const [userLiked, setUserLiked] = useState(false) // Track if user has liked
   const [likeCount, setLikeCount] = useState(initialLikes) // Total likes
+  const [commentCount, setCommentCount] = useState(initialComments) // Total comments
 
   // Format large numbers (e.g., 1,000 → 1K, 1,000,000 → 1M)
   const formatCount = (count) => {
@@ -39,7 +48,7 @@ const WatchShorts = () => {
       setUserLiked(true)
     }
     // Optionally dispatch to Redux or API here
-    dispatch(updateVideoLikes(params.id, likeCount))
+    dispatch(updateVideoLikes(params.id, likeCount, commentCount))
   }
 
   // Ensure state updates when youtubeVideo or params.id changes
@@ -47,18 +56,9 @@ const WatchShorts = () => {
     const video = youtubeShorts.find((item) => item.id === params.id)
     const newLikeCount = video?.statistics?.likeCount || 0
     setLikeCount(newLikeCount)
+    setCommentCount(video?.statistics?.commentCount || 0)
     setUserLiked(false) // Reset user interaction on video change
   }, [params.id, youtubeShorts])
-
-  // Format view count
-  const formatViewCount = (views) => {
-    if (views >= 1_000_000) return (views / 1_000_000).toFixed(1) + 'M views'
-    if (views >= 1_000) return (views / 1_000).toFixed(1) + 'K views'
-    return views + ' views'
-  }
-
-  // Find video data for rendering
-  const currentVideo = youtubeShorts.find((item) => item.id === params.id) || {}
 
   return (
     <Flex
@@ -84,25 +84,50 @@ const WatchShorts = () => {
       </div>
 
       <Flex gap="small">
-        <Flex gap="small" align="center" vertical justify='center'>
+        <Flex gap="small" align="center" vertical justify="flex-end">
           <Button
-            icon={<span>👍</span>}
+            icon={<LikeOutlined />}
             style={{
               borderRadius: '16px',
               backgroundColor: 'rgba(255, 255, 255, 0.5)',
               border: 'none',
             }}
             onClick={handleLike}
-          >
-            {formatCount(likeCount)}
-          </Button>
+          />
+
+          <Text style={{ color: 'white' }}>{formatCount(likeCount)}</Text>
           <Button
-            icon={<span>↗</span>}
-            style={{ borderRadius: '16px' }}
+            icon={<CommentOutlined />}
+            style={{
+              borderRadius: '16px',
+              backgroundColor: 'rgba(255, 255, 255, 0.5)',
+              border: 'none',
+            }}
+            onClick={handleLike}
+          />
+          <Text style={{ color: 'white' }}>{formatCount(commentCount)}</Text>
+          <Button
+            icon={<ShareAltOutlined />}
+            style={{
+              borderRadius: '16px',
+              backgroundColor: 'rgba(255, 255, 255, 0.5)',
+              border: 'none',
+            }}
           ></Button>
+          <Text style={{ color: 'white' }}>{'Share'}</Text>
           <Button
-            icon={<span>↓</span>}
-            style={{ borderRadius: '16px' }}
+            icon={
+              <EllipsisOutlined
+                style={{
+                  transform: 'rotate(90deg)',
+                }}
+              />
+            }
+            style={{
+              borderRadius: '16px',
+              background: 'rgba(255, 255, 255, 0.5)',
+              border: 'none',
+            }}
           ></Button>
         </Flex>
       </Flex>

@@ -19,7 +19,7 @@ const StyledButton = styled(Button)`
   flex: none;
   background-color: #102542;
   border: none;
-  color: #FBFFE5;
+  color: #fbffe5;
   white-space: nowrap;
   padding: 8px 16px;
   border-radius: 20px;
@@ -27,7 +27,7 @@ const StyledButton = styled(Button)`
 `
 
 const HorizontalScrollList = () => {
-    const collapsed = useSelector((state) => state.app.collapsed)
+  const collapsed = useSelector((state) => state.app.collapsed)
   const items = [
     'All',
     'Brahmanandam',
@@ -47,7 +47,11 @@ const HorizontalScrollList = () => {
   ]
 
   return (
-    <ScrollContainer style={{ width: `calc(100% - ${collapsed ? '80px' : '200px'})` }}>
+    <ScrollContainer
+      style={{
+        width: `calc(100% - ${collapsed ? '80px' : '200px'})`,
+      }}
+    >
       {items.map((text, index) => (
         <StyledButton key={index}>{text}</StyledButton>
       ))}
