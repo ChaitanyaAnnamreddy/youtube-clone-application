@@ -2,9 +2,21 @@ import { useEffect, useState } from 'react'
 import { YOUTUBE_VIDEO_API } from '../../utils/constants'
 import { Card, Flex } from 'antd'
 import { useDispatch, useSelector } from 'react-redux'
-import { setItems, clearItems } from '../../utils/store/youtubeVideoSlice'
+import { setItems } from '../../utils/store/youtubeVideoSlice'
+import styled from 'styled-components'
+import { useNavigate } from 'react-router'
 
 const { Meta } = Card
+
+const Body = styled(Meta)`
+  .ant-card-meta-title {
+    color: #f1f1f1 !important;
+  }
+
+  .ant-card-meta-description {
+    color: #aaaaaa !important;
+  }
+`
 
 const formatViewCount = (views) => {
   if (views >= 1_000_000) return (views / 1_000_000).toFixed(1) + 'M views'
@@ -20,6 +32,8 @@ const timeAgo = (dateString) => {
 
 const VideoContainer = () => {
   const dispatch = useDispatch()
+  const navigate = useNavigate()
+
   const youtubeVideos = useSelector((state) => state.youtubeVideo.items)
   const [hoveredIndex, setHoveredIndex] = useState(null)
 
@@ -31,49 +45,56 @@ const VideoContainer = () => {
     }
     fetchVideos()
 
-    return () => {
-      dispatch(clearItems())
-    }
+    // return () => {
+    //   dispatch(clearItems())
+    // }
   }, [dispatch])
 
   return (
     <Flex wrap="wrap" gap="large" align="center">
       {youtubeVideos.map((item, index) => (
         <Card
-          hoverable
           key={index}
           onMouseEnter={() => setHoveredIndex(index)}
           onMouseLeave={() => setHoveredIndex(null)}
+          onClick={() => {
+            navigate(`/watch/${item.id}`)
+          }}
           cover={
             hoveredIndex === index ? (
               <iframe
-                width="460"
-                height="270"
+                width="320"
+                height="242"
                 src={`https://www.youtube.com/embed/${item.id}?autoplay=1&mute=1`}
                 title="YouTube video player"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; web-share"
               ></iframe>
             ) : (
               <img
                 alt="youtube thumbnail"
                 src={item.snippet.thumbnails.high.url}
-                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'fill',
+                  borderRadius: '16px',
+                }}
               />
             )
           }
           style={{
             width: 320,
             cursor: 'pointer',
-            height: 420,
+            height: 350,
             objectFit: 'cover',
             overflow: 'hidden',
             borderRadius: '16px',
             border: 'none',
-            // background: 'none',
+            background: 'none',
             color: 'white !important',
           }}
         >
-          <Meta
+          <Body
             title={item.snippet.title}
             description={
               <div>

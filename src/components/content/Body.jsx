@@ -1,6 +1,7 @@
 import { Flex } from 'antd'
 import ListCarousel from './ListCarousel'
 import VideoContainer from './VideoContainer'
+import Shorts from './Shorts'
 
 const Body = () => {
   return (
@@ -16,6 +17,7 @@ const Body = () => {
     >
       <ListCarousel />
       <VideoContainer />
+      <Shorts />
     </Flex>
   )
 }

@@ -19,6 +19,7 @@ import {
 import styled from 'styled-components'
 import { useSelector, useDispatch } from 'react-redux'
 import { toggleCollapsed } from '../../utils/store/appSlice'
+import { Link } from 'react-router'
 
 const StyledDivider = styled(Divider)`
   background-color: rgba(255, 255, 255, 0.6);
@@ -62,8 +63,24 @@ const StyledButton = styled(Button)`
 `
 
 const items = [
-  { key: '1', icon: <HomeOutlined />, label: 'Home' },
-  { key: '2', icon: <DesktopOutlined />, label: 'Shots' },
+  {
+    key: '1',
+    icon: (
+      <Link to="/">
+        <HomeOutlined />
+      </Link>
+    ),
+    label: 'Home',
+  },
+  {
+    key: '2',
+    icon: (
+      <Link to="/shorts/Ou6UMyShozg">
+        <DesktopOutlined />
+      </Link>
+    ),
+    label: 'Shots',
+  },
   { key: '3', icon: <PlayCircleOutlined />, label: 'Subscription' },
   { key: 'custom-divider-1', label: <StyledDivider />, disabled: true }, // Styled Divider
   {

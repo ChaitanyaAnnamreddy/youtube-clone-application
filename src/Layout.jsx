@@ -1,8 +1,8 @@
 import HeaderBar from './components/header/Header'
 import LeftNav from './components/left-nav/LeftNav'
-import Body from './components/content/Body'
 import { useSelector } from 'react-redux'
 import { Layout } from 'antd'
+import { Outlet } from 'react-router'
 
 const { Sider, Content } = Layout
 
@@ -22,7 +22,7 @@ const LayoutComponent = () => {
             minHeight: '100%',
           }}
         >
-          <Body />
+          <Outlet />
         </Content>
       </Layout>
     </Layout>

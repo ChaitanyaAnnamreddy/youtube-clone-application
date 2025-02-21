@@ -5,6 +5,7 @@ import YoutubeIcon from '../../assets/youtube.svg'
 import { UserOutlined } from '@ant-design/icons'
 import styled from 'styled-components'
 import { useSelector } from 'react-redux' // Import selector to get collapse state
+import { Link } from 'react-router'
 
 const { Header } = Layout
 const { Search } = Input
@@ -63,15 +64,15 @@ const HeaderBar = () => {
       }}
     >
       <Flex justify="space-between" align="center" style={{ marginTop: '6px' }}>
-        <Image
-          src={YoutubeIcon}
-          alt="Youtube Icon"
-          cursor="pointer"
-          width={50}
-          style={{
-            objectFit: 'none',
-          }}
-        />
+        <Link to="/">
+          <Image
+            src={YoutubeIcon}
+            alt="Youtube Icon"
+            cursor="pointer"
+            width={50}
+          />
+        </Link>
+
         <StyledSearch
           placeholder="Search"
           enterButton
