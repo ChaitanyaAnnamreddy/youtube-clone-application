@@ -145,7 +145,7 @@ const HeaderBar = () => {
                   verticalAlign: 'middle',
                 }}
               >
-                <SearchOutlined />
+                <SearchOutlined style={{ marginRight: '8px' }} />
                 {result.snippet.title}
               </span>
             </Link>
