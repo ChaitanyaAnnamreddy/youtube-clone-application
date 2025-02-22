@@ -30,20 +30,20 @@ const HorizontalScrollList = () => {
   const collapsed = useSelector((state) => state.app.collapsed)
   const items = [
     'All',
-    'Brahmanandam',
+    'Explore',
     'Music',
-    'Mass films',
-    'Daggubati Venkatesh',
-    'Shruti Haasan',
+    'Films',
+    'Narendra Modi',
+    'React',
     'News',
-    'Romantic comedies',
+    'Javascript',
     'Podcasts',
-    'Indian Premier League',
-    'Mass films',
-    'Daggubati Venkatesh',
-    'Shruti Haasan',
-    'News',
-    'Romantic comedies',
+    'Comedy',
+    'Dance',
+    'Politics',
+    'Gaming',
+    'New to you',
+    'Watched',
   ]
 
   return (

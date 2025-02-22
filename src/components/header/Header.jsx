@@ -95,7 +95,7 @@ const HeaderBar = () => {
 
         if (jsonData.items) {
           setSearchResults(jsonData)
-          console.log('jsonData', jsonData)
+
           dispatch(storeSearchResult({ [searchQuery]: jsonData.items }))
           dispatch(setItems(jsonData.items))
         } else {
@@ -109,8 +109,6 @@ const HeaderBar = () => {
       }
     }
 
-    console.log('searchQuery', searchQuery)
-    console.log('searchCache', searchCache)
     // Debounce API call
     const timer = setTimeout(() => {
       if (searchCache[searchQuery]) {
@@ -120,7 +118,7 @@ const HeaderBar = () => {
       }
     }, 200)
     return () => clearTimeout(timer)
-  }, [searchQuery])
+  }, [searchQuery, dispatch, searchCache])
 
   const collapsed = useSelector((state) => state.app.collapsed)
   const items = searchResults?.items || []

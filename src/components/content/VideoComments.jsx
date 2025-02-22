@@ -38,7 +38,7 @@ const VideoComments = () => {
         </div>
 
         {/* Comment Input Box */}
-        <form className="mb-6">
+        <form className="mb-6" onSubmit={(e) => e.preventDefault()}>
           <div className="py-2 px-4 mb-4 bg-white rounded-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
             <label htmlFor="comment" className="sr-only">
               Your comment

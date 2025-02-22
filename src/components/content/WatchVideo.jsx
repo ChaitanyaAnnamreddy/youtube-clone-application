@@ -1,4 +1,4 @@
-import { Flex, Button } from 'antd'
+import { Flex } from 'antd'
 import { useParams } from 'react-router'
 import { Text } from '@chakra-ui/react'
 import { useSelector, useDispatch } from 'react-redux'
@@ -12,6 +12,7 @@ import VideoRecommendation from './VideoRecommendation'
 import VideoComments from './VideoComments'
 import { useMediaQuery } from 'react-responsive'
 import { addFetchedVideo } from '../../utils/store/youtubeVideoSlice'
+import LiveChat from './LiveChat'
 
 // Action to update like/dislike in Redux (optional, if you want to persist state)
 // const updateVideoLikes = (videoId, likes) => {
@@ -95,7 +96,6 @@ const WatchVideo = () => {
   //     if (views >= 1_000) return (views / 1_000).toFixed(1) + 'K views'
   //     return views + ' views'
   //   }
-  console.log('youtubeVideo', video)
 
   return (
     <Flex
@@ -107,7 +107,10 @@ const WatchVideo = () => {
         width: '100%',
       }}
     >
-      <Flex vertical style={{ width: isTablet ? '100%' : '65%' }}>
+      <Flex
+        vertical
+        style={{ width: isTablet ? '100%' : '65%', marginTop: '10px' }}
+      >
         <div
           style={{
             height: isMobile ? '200px' : '500px',
@@ -196,6 +199,7 @@ const WatchVideo = () => {
           display: isTablet ? 'none' : 'flex',
         }}
       >
+        <LiveChat />
         <VideoRecommendation items={youtubeVideo} id={params.id} />
       </Flex>
     </Flex>
